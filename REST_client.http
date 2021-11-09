@@ -1,0 +1,27 @@
+# Must have REST CLIENT vsCode estension installed
+# Comments
+### Seperate HTTP Requests
+# Content-Type application/json
+
+# Click on "Send Request" to acctivate HTTP Call
+
+# GET/TEST
+GET http://localhost:3001/test
+
+### POST
+POST http://localhost:3001/something
+Content-Type: application/json
+
+{
+  "name": "Frank",
+  "description": "I like cats"
+}
+
+### PUT
+PUT http://localhost:3001/
+Content-Type: application/json
+
+{
+  "name":"Updated stuff"
+}
+

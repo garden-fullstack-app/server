@@ -1,0 +1,18 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "React App API server for Garden App",
+  "main": "server.js",
+  "scripts": {
+    "tree": "tree -I node_modules",
+    "start": "nodemon server.js"
+  },
+  "author": "Team Garden",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.14"
+  }
+}
