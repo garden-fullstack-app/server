@@ -6,7 +6,10 @@
 # Click on "Send Request" to acctivate HTTP Call
 
 # GET/TEST
-GET http://localhost:3001/test
+GET http://localhost:3001/crops
+
+### GET Plant Test
+GET http://www.growstuff.org/crops/avocado.json
 
 ### POST
 POST http://localhost:3001/something
@@ -25,3 +28,5 @@ Content-Type: application/json
   "name":"Updated stuff"
 }
 
+###
+GET https://www.growstuff.org/crops/avocado.json
