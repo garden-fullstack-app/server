@@ -32,7 +32,8 @@ Crops.postPlant = async (req, res) => {
       plantDescription: getCrops.data.openfarm_data.attributes.description,
       plantSowMethod: getCrops.data.openfarm_data.attributes.sowing_method,
       medianDaysToFirstHarvest: getCrops.data.median_days_to_first_harvest,
-      medianDaysToLastHarvest: getCrops.data.median_days_to_last_harvest
+      medianDaysToLastHarvest: getCrops.data.median_days_to_last_harvest,
+      cropImage: getCrops.data.openfarm_data.attributes.main_image_path
     };
 
 
