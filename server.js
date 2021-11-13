@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 let weatherData = require('./modules/weather.js');
 const Crops = require('./modules/crops.js');
+const Pests = require('./modules/pest.js');
 
 const app = express();
 app.use(express.json());
@@ -15,12 +16,22 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, u
 );
 
 
-
-app.get('/crops', Crops.getAllPlants);
+// Weather Route
 app.get('/weather', weatherData);
+
+// Plant Routes
+app.get('/crops', Crops.getAllPlants);
 app.post('/crops', Crops.postPlant);
 app.put('/crops/:id', Crops.updatePlant);
 app.delete('/crops/:id', Crops.deletePlant);
+
+// Pest Routes
+app.get('/allPests', Pests.getAllPests);
+app.post('/allPests', Pests.addAPest);
+// app.put('allPests/:id', Pests.updatePest);
+app.delete('/allPests/:id', Pests.deleteOnePest);
+
+
 app.get("/test", (req, res) => res.send("SERVER IS RUNNING"));
 
 
@@ -36,8 +47,8 @@ app.get('/allPests', (req, res) => {
 
   });
 })
-app.get('/seed', seed);
-app.get('/clear', clearDB)
+// app.get('/seed', seed);
+// app.get('/clear', clearDB)
 
 
 
@@ -55,24 +66,7 @@ db.once('open', _ => {
 
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 
-const pestSchema = new mongoose.Schema({
-  pestName: { type: String },
-  pestFamily: { type: String },
-  dateSpotted: { type: Date },
-  weather: { type: Object },
-  plantsAttacked: { type: Array },
-  preventiveMeasure: { type: String }
 
-})
-
-const PestModel = mongoose.model('gardenPest', pestSchema, 'gardenCollection');
-const sampleEntry = new PestModel({
-  pestName: 'rat',
-  pestFamily: 'rodent',
-  dateSpotted: 10 / 20 / 2021,
-
-})
-sampleEntry.save();
 
 
 
@@ -88,22 +82,6 @@ sampleEntry.save();
 // })
 
 
-// const plantSchema = new mongoose.Schema({
-//   plantName: { type: String },
-//   plantFamily: { type: String },
-//   determinate: { type: Boolean },
-//   directSowDate: { type: Date },
-//   daysToMaturity: { type: Number },
-//   harvestCountdown: { type: Date },
-//   lightRequirements: { type: String },
-//   fertilizing: { type: Object },
-//   companionPlants: { type: Array },
-//   enemyPlants: { type: Array }
-
-// })
-// // Model 
-
-// const PlantModel = mongoose.model('gardenPlant', plantSchema, 'gardenCollection');
 
 
 

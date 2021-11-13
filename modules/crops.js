@@ -1,7 +1,7 @@
 'use strict';
 
 // JUST FOR TESTING PURPOSES!!! THIS DISABLES HTTPS SECURITY
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const axios = require('axios');
 
@@ -16,10 +16,10 @@ const Crops = {};
 Crops.postPlant = async (req, res) => {
   // Request Query
   let { plantName } = req.query;
-  let cropURL = `http://www.growstuff.org/crops/${plantName}.json`;
+  // let cropURL = `http://www.growstuff.org/crops/${plantName}.json`;
 
   // TEST URL
-  // let cropURL = `http://www.growstuff.org/crops/leek.json`;
+  let cropURL = `http://www.growstuff.org/crops/leek.json`;
 
   try {
     let getCrops = await axios.get(cropURL);
