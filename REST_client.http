@@ -30,4 +30,4 @@ Content-Type: application/json
 }
 
 ###
-GET https://www.growstuff.org/crops/avocado.json
+DELETE http://localhost:3001/crops/618df64abd98b50d673475e9

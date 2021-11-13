@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 const Crops = require('./modules/crops.js');
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3001;
@@ -17,6 +18,7 @@ app.post('/crops', Crops.postPlant);
 app.put('/crops/:id', Crops.updatePlant);
 app.delete('/crops/:id', Crops.deletePlant);
 app.get("/test", (req, res) => res.send("SERVER IS RUNNING"));
+
 
 
 

@@ -48,7 +48,7 @@ Crops.postPlant = async (req, res) => {
 }
 
 
-// Function to retrieve all stored plants
+// Function to retrieve all stored plants GET Route
 Crops.getAllPlants = (req, res) => {
   PlantModel.find((err, item) => {
     if (err) return res.status(500).send(err);
@@ -58,10 +58,12 @@ Crops.getAllPlants = (req, res) => {
   })
 }
 
-// Non - functional PUT Route
+// Functional PUT Route
 Crops.updatePlant = async (req, res) => {
   let putObj = req.body;
+  console.log(req.body);
   let id = req.params.id;
+  console.log(req.params);
 
   try {
     const updatedObj = await PlantModel.findByIdAndUpdate(id, putObj, { new: true, overwrite: true });
@@ -72,6 +74,8 @@ Crops.updatePlant = async (req, res) => {
   }
 }
 
+
+// Functional DELETE Route
 Crops.deletePlant = async (req, res) => {
   let { id } = req.params;
   try {
