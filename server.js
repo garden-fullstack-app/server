@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-
+let weatherData = require('./modules/weather.js');
 const Crops = require('./modules/crops.js');
 const app = express();
 app.use(express.json());
@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 3001;
 
 
 app.get('/crops', Crops.getAllPlants);
+app.get('/weather', weatherData);
 app.post('/crops', Crops.postPlant);
 app.put('/crops/:id', Crops.updatePlant);
 app.delete('/crops/:id', Crops.deletePlant);
