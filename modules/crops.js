@@ -13,21 +13,22 @@ const Crops = {};
 
 Crops.postPlant = async (req, res) => {
   // Request Query
-  console.log(req.body);
+  console.log("Incoming: ", req.body);
   let { plantFamily } = req.body;
-  console.log(plantFamily);
   let cropURL = `http://www.growstuff.org/crops/${plantFamily}.json`;
 
   // TEST URL
   // let cropURL = `http://www.growstuff.org/crops/leek.json`;
 
   try {
-    let getCrops = await axios.get(cropURL);
-    console.log(getCrops.data);
+    let allCrops = await axios.get(cropURL);
+    let getCrops = allCrops;
+    // console.log(getCrops.data);
 
     // Target key/values of pulled API data of to shape desired plant object
     const plantObject = {
-      plantName: getCrops.data.name,
+      x: req.body.x,
+      y: req.body.y,
       plantName: req.body.plantName,
       plantFamily: req.body.plantFamily,
       determinate: req.body.determinate,
@@ -35,11 +36,11 @@ Crops.postPlant = async (req, res) => {
       daysToMaturity: req.body.daysToMaturity,
       lightRequirements: req.body.lightRequirements,
       fertilizing: req.body.fertilizing,
-      plantDescription: getCrops.data.openfarm_data.attributes.description,
-      plantSowMethod: getCrops.data.openfarm_data.attributes.sowing_method,
-      medianDaysToFirstHarvest: getCrops.data.median_days_to_first_harvest,
-      medianDaysToLastHarvest: getCrops.data.median_days_to_last_harvest,
-      cropImage: getCrops.data.openfarm_data.attributes.main_image_path,
+      plantDescription: getCrops.data.openfarm_data.attributes?.description ?? "no data",
+      plantSowMethod: getCrops.data.openfarm_data.attributes?.sowing_method ?? "no data",
+      medianDaysToFirstHarvest: getCrops.data?.median_days_to_first_harvest ?? "no data",
+      medianDaysToLastHarvest: getCrops.data?.median_days_to_last_harvest ?? "no data",
+      cropImage: getCrops.data.openfarm_data?.attributes?.main_image_path ?? "no data",
     };
 
     // alternate Light Requirements
@@ -65,11 +66,15 @@ Crops.postPlant = async (req, res) => {
     // enemyPlants: { type: Array },
 
     let postEntry = PlantModel(plantObject);
-    postEntry.save();
+    postEntry.save((err, postEntry) => {
+      if (err) {
+        console.log(err);
+      }
+      plantArray.push(plantObject);
+      console.log("Post Entry Happened");
+      res.status(200).json(postEntry);
+    });
     // Send newly created plantObject to the plant Array
-    plantArray.push(plantObject);
-    console.log(postEntry);
-    res.status(200).send();
   } catch (err) {
     console.log("No Plant Data:", err.message);
   }

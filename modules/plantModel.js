@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
-
-
 const plantSchema = new mongoose.Schema({
+  x: { type: Number },
+  y: { type: Number },
   plantName: { type: String },
   plantFamily: { type: String },
   determinate: { type: Boolean },
@@ -19,13 +19,9 @@ const plantSchema = new mongoose.Schema({
   plantDescription: { type: String },
   plantSowMethod: { type: String },
   medianDaysToFirstHarvest: { type: Number },
-  medianDaysToLastHarvest: { type: Number }
-})
+  medianDaysToLastHarvest: { type: Number },
+});
 
-
-
-const PlantModel = mongoose.model('gardenPlant', plantSchema);
+const PlantModel = mongoose.model("gardenPlant", plantSchema);
 
 module.exports = PlantModel;
-
-
