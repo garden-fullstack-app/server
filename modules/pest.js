@@ -40,10 +40,6 @@ Pests.getAllPests = async (req, res) => {
 // }
 
 Pests.deleteOnePest = async (req, res) => {
-  // const id = req.params.id;
-  // let deletedPest = await PestModel.findByIdAndDelete(id);
-  // res.status(200).send(deletedPest);
-
 
   let { id } = req.params;
   try {

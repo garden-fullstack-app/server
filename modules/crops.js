@@ -1,7 +1,7 @@
 'use strict';
 
 // JUST FOR TESTING PURPOSES!!! THIS DISABLES HTTPS SECURITY
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const axios = require('axios');
 
@@ -15,11 +15,11 @@ const Crops = {};
 
 Crops.postPlant = async (req, res) => {
   // Request Query
-  let { plantName } = req.query;
-  // let cropURL = `http://www.growstuff.org/crops/${plantName}.json`;
+  let { plantFamily } = req.body.plantFamily;
+  let cropURL = `http://www.growstuff.org/crops/${plantFamily}.json`;
 
   // TEST URL
-  let cropURL = `http://www.growstuff.org/crops/leek.json`;
+  // let cropURL = `http://www.growstuff.org/crops/leek.json`;
 
   try {
     let getCrops = await axios.get(cropURL);
@@ -28,7 +28,13 @@ Crops.postPlant = async (req, res) => {
     // Target key/values of pulled API data of to shape desired plant object
     const plantObject = {
       plantName: getCrops.data.name,
-      lightRequirements: getCrops.data.openfarm_data.attributes.sun_requirements,
+      plantName: req.body.plantName,
+      plantFamily: req.body.plantFamily,
+      determinate: req.body.determinate,
+      directSowDate: req.body.directSowDate,
+      daysToMaturity: req.body.daysToMaturity,
+      lightRequirements: req.body.lightRequirements,
+      fertilizing: req.body.fertilizing,
       plantDescription: getCrops.data.openfarm_data.attributes.description,
       plantSowMethod: getCrops.data.openfarm_data.attributes.sowing_method,
       medianDaysToFirstHarvest: getCrops.data.median_days_to_first_harvest,
@@ -36,6 +42,28 @@ Crops.postPlant = async (req, res) => {
       cropImage: getCrops.data.openfarm_data.attributes.main_image_path
     };
 
+
+    // alternate Light Requirements
+    // lightRequirements: getCrops.data.openfarm_data.attributes.sun_requirements,
+
+    //req.body Information to insert into plant object above
+    // plantName: req.body.plantName,
+    // plantFamily: req.body.plantFamily,
+    // determinate: req.body.determinate,
+    // directSowDate: req.body.directSowDate,
+    // daysToMaturity: req.body.daysToMaturity,
+    // lightRequirements: req.body.lightRequirements,
+    // fertilizing: req.body.fertilizing
+    // plantName: { type: String },
+    // plantFamily: req.body.name,
+    // determinate: { type: Boolean },
+    // directSowDate: { type: Date },
+    // daysToMaturity: { type: Number },
+    // harvestCountdown: { type: Date },
+    // lightRequirements: { type: String },
+    // fertilizing: { type: Object },
+    // companionPlants: { type: Array },
+    // enemyPlants: { type: Array },
 
     let postEntry = PlantModel(plantObject);
     postEntry.save();
@@ -50,14 +78,40 @@ Crops.postPlant = async (req, res) => {
 
 
 // Function to retrieve all stored plants GET Route
-Crops.getAllPlants = (req, res) => {
-  PlantModel.find((err, item) => {
-    if (err) return res.status(500).send(err);
-    else {
-      res.status(200).send(item);
-    }
-  })
-}
+Crops.getAllPlants = async (req, res) => {
+  try {
+    //   let filterQ = {};
+    //   if (req.query.status) {
+    //     let { status } = req.query;
+    //     filterQ.status = status;
+    //   }
+    //   //JWKS
+    //   const item = await PlantModel.find(filterQ);
+    //   let token = '';
+    //   if (!req.headers.authorization) token = '';
+    //   else {
+    //     token = req.headers.authorization.split([' '])[1];
+    //   }
+
+    //   jwt.verify(token, getKey, {}, function (err, user) {
+    //     if (err) res.status(500).send(`Invalid Token: ${err.message}`);
+    //     else {
+    //       res.status(200).send(item);
+    //     }
+    //   })
+
+    PlantModel.find((err, item) => {
+      if (err) return res.status(500).send(err);
+      else {
+        res.status(200).send(item);
+      }
+    })
+  }
+
+  catch (error) {
+    res.status(500).send(`Error retrieving Plant data:${error.message}`);
+  }
+};
 
 // Functional PUT Route
 Crops.updatePlant = async (req, res) => {
@@ -83,7 +137,7 @@ Crops.deletePlant = async (req, res) => {
     let deletedObj = await PlantModel.findByIdAndDelete(id);
     res.status(200).send(deletedObj);
   }
-  catch {
+  catch (err) {
     res.status(500).send(`Deletion Error: ${err.message}`);
   }
 }
