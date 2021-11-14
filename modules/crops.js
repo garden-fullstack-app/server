@@ -15,7 +15,7 @@ const Crops = {};
 
 Crops.postPlant = async (req, res) => {
   // Request Query
-  // let { plantFamily } = req.body.plantFamily;
+  let { plantFamily } = req.body.plantFamily;
   let cropURL = `http://www.growstuff.org/crops/${plantFamily}.json`;
 
   // TEST URL
