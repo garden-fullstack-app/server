@@ -1,21 +1,21 @@
-'use strict';
+"use strict";
 
 // JUST FOR TESTING PURPOSES!!! THIS DISABLES HTTPS SECURITY
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const axios = require('axios');
+const axios = require("axios");
 
-const PlantModel = require('./plantModel.js');
+const PlantModel = require("./plantModel.js");
 
 const plantArray = [];
 
 const Crops = {};
 
-
-
 Crops.postPlant = async (req, res) => {
   // Request Query
-  let { plantFamily } = req.body.plantFamily;
+  console.log(req.body);
+  let { plantFamily } = req.body;
+  console.log(plantFamily);
   let cropURL = `http://www.growstuff.org/crops/${plantFamily}.json`;
 
   // TEST URL
@@ -39,9 +39,8 @@ Crops.postPlant = async (req, res) => {
       plantSowMethod: getCrops.data.openfarm_data.attributes.sowing_method,
       medianDaysToFirstHarvest: getCrops.data.median_days_to_first_harvest,
       medianDaysToLastHarvest: getCrops.data.median_days_to_last_harvest,
-      cropImage: getCrops.data.openfarm_data.attributes.main_image_path
+      cropImage: getCrops.data.openfarm_data.attributes.main_image_path,
     };
-
 
     // alternate Light Requirements
     // lightRequirements: getCrops.data.openfarm_data.attributes.sun_requirements,
@@ -69,13 +68,12 @@ Crops.postPlant = async (req, res) => {
     postEntry.save();
     // Send newly created plantObject to the plant Array
     plantArray.push(plantObject);
-    res.status(200).send(postEntry);
+    console.log(postEntry);
+    res.status(200).send();
+  } catch (err) {
+    console.log("No Plant Data:", err.message);
   }
-  catch (err) {
-    console.log('No Plant Data:', err.message);
-  }
-}
-
+};
 
 // Function to retrieve all stored plants GET Route
 Crops.getAllPlants = async (req, res) => {
@@ -105,10 +103,8 @@ Crops.getAllPlants = async (req, res) => {
       else {
         res.status(200).send(item);
       }
-    })
-  }
-
-  catch (error) {
+    });
+  } catch (error) {
     res.status(500).send(`Error retrieving Plant data:${error.message}`);
   }
 };
@@ -123,12 +119,10 @@ Crops.updatePlant = async (req, res) => {
   try {
     const updatedObj = await PlantModel.findByIdAndUpdate(id, putObj, { new: true, overwrite: true });
     res.status(200).send(updatedObj);
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).send(`Unable to perform PUT: ${err.message}`);
   }
-}
-
+};
 
 // Functional DELETE Route
 Crops.deletePlant = async (req, res) => {
@@ -136,12 +130,9 @@ Crops.deletePlant = async (req, res) => {
   try {
     let deletedObj = await PlantModel.findByIdAndDelete(id);
     res.status(200).send(deletedObj);
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).send(`Deletion Error: ${err.message}`);
   }
-}
-
-
+};
 
 module.exports = Crops;
