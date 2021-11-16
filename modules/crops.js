@@ -1,33 +1,34 @@
-'use strict';
+"use strict";
 
 // JUST FOR TESTING PURPOSES!!! THIS DISABLES HTTPS SECURITY
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const axios = require('axios');
+const axios = require("axios");
 
-const PlantModel = require('./plantModel.js');
+const PlantModel = require("./plantModel.js");
 
 const plantArray = [];
 
 const Crops = {};
 
-
-
 Crops.postPlant = async (req, res) => {
   // Request Query
-  let { plantFamily } = req.body.plantFamily;
+  console.log("Incoming: ", req.body);
+  let { plantFamily } = req.body;
   let cropURL = `http://www.growstuff.org/crops/${plantFamily}.json`;
 
   // TEST URL
   // let cropURL = `http://www.growstuff.org/crops/leek.json`;
 
   try {
-    let getCrops = await axios.get(cropURL);
-    console.log(getCrops.data);
+    let allCrops = await axios.get(cropURL);
+    let getCrops = allCrops;
+    // console.log(getCrops.data);
 
     // Target key/values of pulled API data of to shape desired plant object
     const plantObject = {
-      plantName: getCrops.data.name,
+      x: req.body.x,
+      y: req.body.y,
       plantName: req.body.plantName,
       plantFamily: req.body.plantFamily,
       determinate: req.body.determinate,
@@ -35,13 +36,12 @@ Crops.postPlant = async (req, res) => {
       daysToMaturity: req.body.daysToMaturity,
       lightRequirements: req.body.lightRequirements,
       fertilizing: req.body.fertilizing,
-      plantDescription: getCrops.data.openfarm_data.attributes.description,
-      plantSowMethod: getCrops.data.openfarm_data.attributes.sowing_method,
-      medianDaysToFirstHarvest: getCrops.data.median_days_to_first_harvest,
-      medianDaysToLastHarvest: getCrops.data.median_days_to_last_harvest,
-      cropImage: getCrops.data.openfarm_data.attributes.main_image_path
+      plantDescription: getCrops.data.openfarm_data.attributes?.description ?? "no data",
+      plantSowMethod: getCrops.data.openfarm_data.attributes?.sowing_method ?? "no data",
+      medianDaysToFirstHarvest: getCrops.data?.median_days_to_first_harvest ?? "no data",
+      medianDaysToLastHarvest: getCrops.data?.median_days_to_last_harvest ?? "no data",
+      cropImage: getCrops.data.openfarm_data?.attributes?.main_image_path ?? "no data",
     };
-
 
     // alternate Light Requirements
     // lightRequirements: getCrops.data.openfarm_data.attributes.sun_requirements,
@@ -66,16 +66,17 @@ Crops.postPlant = async (req, res) => {
     // enemyPlants: { type: Array },
 
     let postEntry = PlantModel(plantObject);
-    postEntry.save();
-    // Send newly created plantObject to the plant Array
-    plantArray.push(plantObject);
-    res.status(200).send(postEntry);
+    postEntry.save((err, postEntry) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log("Post Entry Happened");
+      res.status(200).json(postEntry);
+    });
+  } catch (err) {
+    console.log("No Plant Data:", err.message);
   }
-  catch (err) {
-    console.log('No Plant Data:', err.message);
-  }
-}
-
+};
 
 // Function to retrieve all stored plants GET Route
 Crops.getAllPlants = async (req, res) => {
@@ -105,10 +106,8 @@ Crops.getAllPlants = async (req, res) => {
       else {
         res.status(200).send(item);
       }
-    })
-  }
-
-  catch (error) {
+    });
+  } catch (error) {
     res.status(500).send(`Error retrieving Plant data:${error.message}`);
   }
 };
@@ -123,12 +122,10 @@ Crops.updatePlant = async (req, res) => {
   try {
     const updatedObj = await PlantModel.findByIdAndUpdate(id, putObj, { new: true, overwrite: true });
     res.status(200).send(updatedObj);
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).send(`Unable to perform PUT: ${err.message}`);
   }
-}
-
+};
 
 // Functional DELETE Route
 Crops.deletePlant = async (req, res) => {
@@ -136,12 +133,9 @@ Crops.deletePlant = async (req, res) => {
   try {
     let deletedObj = await PlantModel.findByIdAndDelete(id);
     res.status(200).send(deletedObj);
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).send(`Deletion Error: ${err.message}`);
   }
-}
-
-
+};
 
 module.exports = Crops;
