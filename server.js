@@ -7,7 +7,8 @@ let weatherData = require('./modules/weather.js');
 const Crops = require('./modules/crops.js');
 const Pests = require('./modules/pest.js');
 const PlantModel = require('./modules/plantModel.js');
-
+const Seed = require('./modules/seed.js');
+const clearDB = require('./modules/clear.js');
 
 const app = express();
 app.use(express.json());
@@ -34,6 +35,10 @@ app.post('/allPests', Pests.addAPest);
 app.delete('/allPests/:id', Pests.deleteOnePest);
 
 
+// Seed and Clear
+app.get("/seed", Seed.seedDb);
+app.get('/clear', clearDB)
+
 app.get("/test", (req, res) => res.send("SERVER IS RUNNING"));
 
 
@@ -49,8 +54,8 @@ app.get('/allPests', (req, res) => {
 
   });
 })
-app.get('/seed', seed);
-app.get('/clear', clearDB)
+
+
 
 
 
@@ -69,65 +74,3 @@ db.once('open', _ => {
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 
 
-
-
-
-
-
-
-
-
-async function clearDB(req, res) {
-  try {
-    await PlantModel.deleteMany({});
-    console.log('Database Cleared');
-    res.status(200).send('cleared')
-    await PestModel.deleteMany({});
-    console.log('Database Cleared');
-    res.status(200).send('cleared')
-  }
-  catch (e) {
-    console.log('error:', e.message);
-  }
-}
-
-function seed(req, res) {
-  const seedArr = [
-    {
-      plantName: 'orange',
-      plantFamily: 'fruit',
-      determinate: true,
-      directSowDate: "12/10/2018",
-      daysToMaturity: 80,
-      harvestCountdown: "12/10/2018",
-      lightRequirements: 'Full Sun',
-      fertilizing: { fertilizer: 'NPK' },
-      companionPlants: [],
-      enemyPlants: [],
-      cropImage: 'https://s3.amazonaws.com/openfarm-project/production/media/pictures/attachments/54b4aef16130650002050000.jpg?1421127404',
-      plantDescription: 'Round orange fruit',
-      plantSowMethod: 'None',
-      medianDaysToFirstHarvest: 38,
-      medianDaysToLastHarvest: 56
-    }
-
-
-  ]
-  seedArr.forEach(seed => {
-    let entry = new PlantModel(seed);
-    entry.save();
-  })
-  res.status(200).send('seeded the database');
-}
-
-
-
-// {
-//   plantName: 'banana',
-//   plantFamily: 'fruit',
-//   determinate: true,
-// },
-// {
-//   plantName: 'apple',
-//   plantFamily: 'fruit',
-//   determinate: true,

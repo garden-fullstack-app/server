@@ -70,11 +70,9 @@ Crops.postPlant = async (req, res) => {
       if (err) {
         console.log(err);
       }
-      plantArray.push(plantObject);
       console.log("Post Entry Happened");
       res.status(200).json(postEntry);
     });
-    // Send newly created plantObject to the plant Array
   } catch (err) {
     console.log("No Plant Data:", err.message);
   }
