@@ -5,6 +5,8 @@ const { Schema } = mongoose;
 const plantSchema = new mongoose.Schema({
   x: { type: Number },
   y: { type: Number },
+  width: {type: Number },
+  height: { type: Number },
   plantName: { type: String },
   plantFamily: { type: String },
   determinate: { type: Boolean },
