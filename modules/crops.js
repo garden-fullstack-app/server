@@ -29,6 +29,8 @@ Crops.postPlant = async (req, res) => {
     const plantObject = {
       x: req.body.x,
       y: req.body.y,
+      width: req.body.width,
+      height: req.body.height,
       plantName: req.body.plantName,
       plantFamily: req.body.plantFamily,
       determinate: req.body.determinate,
@@ -104,6 +106,7 @@ Crops.getAllPlants = async (req, res) => {
     PlantModel.find((err, item) => {
       if (err) return res.status(500).send(err);
       else {
+        console.log(item)
         res.status(200).send(item);
       }
     });
@@ -115,7 +118,7 @@ Crops.getAllPlants = async (req, res) => {
 // Functional PUT Route
 Crops.updatePlant = async (req, res) => {
   let putObj = req.body;
-  console.log(req.body);
+  console.log('put' ,req.body);
   let id = req.params.id;
   console.log(req.params);
 
