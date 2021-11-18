@@ -26,6 +26,7 @@ app.get('/weather', weatherData);
 app.get('/crops', Crops.getAllPlants);
 app.post('/crops', Crops.postPlant);
 app.put('/crops/:id', Crops.updatePlant);
+app.put('/pestUpdate/:id', Crops.pestUpdate)
 app.delete('/crops/:id', Crops.deletePlant);
 
 // Pest Routes

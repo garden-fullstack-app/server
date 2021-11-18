@@ -22,6 +22,7 @@ const plantSchema = new mongoose.Schema({
   plantSowMethod: { type: String },
   medianDaysToFirstHarvest: { type: Number },
   medianDaysToLastHarvest: { type: Number },
+  pestActivity: { type: Array },
 });
 
 const PlantModel = mongoose.model("gardenPlant", plantSchema);

@@ -123,7 +123,8 @@ Crops.updatePlant = async (req, res) => {
   console.log(req.params);
 
   try {
-    const updatedObj = await PlantModel.findByIdAndUpdate(id, putObj, { new: true, overwrite: true });
+     
+    const updatedObj = await PlantModel.findByIdAndUpdate(id, putObj, { new: true, overwrite: true, });
     res.status(200).send(updatedObj);
   } catch (err) {
     res.status(500).send(`Unable to perform PUT: ${err.message}`);
@@ -133,6 +134,7 @@ Crops.updatePlant = async (req, res) => {
 // Functional DELETE Route
 Crops.deletePlant = async (req, res) => {
   let { id } = req.params;
+  console.log(id)
   try {
     let deletedObj = await PlantModel.findByIdAndDelete(id);
     res.status(200).send(deletedObj);
@@ -140,5 +142,20 @@ Crops.deletePlant = async (req, res) => {
     res.status(500).send(`Deletion Error: ${err.message}`);
   }
 };
+
+Crops.pestUpdate = async (req, res) => {
+  let { id, body } = req;
+
+  try {
+    const doc = await PlantModel.findByIdAndUpdate()
+    let updatedObj = await PlantModel.
+    res.status(200).json(updatedObj)
+  }catch(e) {
+    console.log(e.message);
+    res.status(500).send(e.message);
+  }
+
+}
+
 
 module.exports = Crops;
