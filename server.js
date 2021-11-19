@@ -45,7 +45,6 @@ app.get("/test", (req, res) => res.send("SERVER IS RUNNING"));
 
 
 
-
 app.get('/allPests', (req, res) => {
   PestModel.find((err, item) => {
     if (err) return res.status(500).send(err);
